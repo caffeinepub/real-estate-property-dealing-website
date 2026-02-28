@@ -1,0 +1,280 @@
+{
+  "kind": "build_request",
+  "title": "Professional Real Estate & Property Dealing Website",
+  "projectName": "Prime Properties",
+  "priority": "normal",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "text": "Create a Motoko backend actor with a Property data model including: id, title, description, price (Nat), squareFootage (Nat), location (text), propertyType (\"Residential\" | \"Commercial\"), amenities (array of text), imageUrls (array of text), isFeatured (Bool), and createdAt (Int). Expose CRUD functions: addProperty, updateProperty, deleteProperty, getProperty, getAllProperties, getFeaturedProperties, and searchProperties (filter by type, maxBudget, location keyword).",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "Property Management System: A dynamic 'Listings' section where I can easily add, edit, and delete property profiles including images, price, square footage, location, and amenities."
+        ]
+      },
+      "acceptanceCriteria": [
+        "addProperty stores a new listing and returns the generated ID",
+        "updateProperty modifies an existing listing by ID",
+        "deleteProperty removes a listing by ID",
+        "getAllProperties returns the full list of properties",
+        "getFeaturedProperties returns only properties with isFeatured = true",
+        "searchProperties filters by propertyType, maxBudget, and location keyword (case-insensitive partial match)"
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "text": "Create a Motoko backend actor function to store inquiry/lead submissions with fields: propertyId (text), visitorName (text), visitorEmail (text), visitorPhone (text), message (text), submittedAt (Int). Expose submitInquiry and getAllInquiries functions so the admin can view leads.",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "Lead Generation: Integration of 'Book a Visit' or 'Inquiry' forms on every individual property page that sends data directly to my email."
+        ]
+      },
+      "acceptanceCriteria": [
+        "submitInquiry persists the lead and returns a success confirmation",
+        "getAllInquiries returns all stored inquiries",
+        "Inquiry records include propertyId, visitor details, message, and timestamp"
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "text": "Build a multi-page React frontend with client-side routing supporting: Home (/), All Listings (/listings), Property Detail (/listings/:id), About Us (/about), Contact (/contact), and Admin Dashboard (/admin).",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "Home",
+          "All Listings",
+          "Property Detail Page",
+          "About Us",
+          "Contact"
+        ]
+      },
+      "acceptanceCriteria": [
+        "All six routes render distinct page components without full page reload",
+        "Navigation links in the header correctly route to each page",
+        "Navigating to /listings/:id with a valid ID shows that property's detail page",
+        "404 fallback route exists for unmatched paths"
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "text": "Build the Home page with: (1) a full-width hero banner using the generated hero image, a bold headline, a sub-headline, and a search bar with dropdowns for Property Type (Residential/Commercial), Max Budget (range options), and Location (text input) plus a Search button that navigates to /listings with query params; (2) a 'Featured Properties' horizontal carousel showing featured listings (image, title, price, location, type badge, View Details button); (3) a 'Why Choose Us' section with 3–4 icon+text cards highlighting trust signals (e.g., expert agents, verified listings, fast deals, local market knowledge).",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "Home: Featuring a hero banner with a search bar, 'Featured Properties' carousel, and a brief 'Why Choose Us' section."
+        ]
+      },
+      "acceptanceCriteria": [
+        "Hero banner renders the generated hero image as background with overlay text and search bar visible on all screen sizes",
+        "Search bar dropdowns for Type and Budget are functional; Location is a free-text input",
+        "Clicking Search navigates to /listings and pre-fills filter state from query params",
+        "Featured Properties carousel shows at least 3 cards and supports horizontal scroll/swipe",
+        "Why Choose Us section displays at least 3 cards with icons and descriptive text"
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "text": "Build the All Listings page (/listings) with a sidebar/top filter panel (Property Type, Max Budget, Location) and a responsive grid of property cards. Each card shows: thumbnail image, title, price, square footage, location, type badge, and a 'View Details' button linking to /listings/:id. Apply active filters from URL query params on load and update URL when filters change.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "All Listings: A grid-style layout showing all available properties with clear 'View Details' buttons."
+        ]
+      },
+      "acceptanceCriteria": [
+        "Grid shows all properties returned by getAllProperties when no filters are active",
+        "Changing filter values re-queries searchProperties and updates the displayed cards",
+        "Filter state is reflected in the URL query string",
+        "Each card's View Details button navigates to the correct /listings/:id route",
+        "Empty state message shown when no properties match the filters"
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "text": "Build the Property Detail page (/listings/:id) with: (1) a multi-image gallery (thumbnail strip + large preview); (2) full property details (title, price, sqft, location, type, amenities list, full description); (3) an embedded map placeholder section labeled 'Location Map' (using a static map image or iframe placeholder since external map APIs are not supported natively); (4) a 'Book a Visit / Inquiry' form with fields for Name, Email, Phone, Message, and a Submit button that calls submitInquiry on the backend and shows a success confirmation.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "Property Detail Page: A template page for individual listings featuring an image gallery, detailed description, Google Maps integration, and a contact form."
+        ]
+      },
+      "acceptanceCriteria": [
+        "Navigating to /listings/:id fetches and displays the correct property data",
+        "Image gallery shows all imageUrls; clicking a thumbnail updates the large preview",
+        "All property fields (price, sqft, location, type, amenities, description) are displayed",
+        "Inquiry form validates required fields (Name, Email, Message) before submission",
+        "On successful submitInquiry call, a success message is displayed to the user",
+        "Map section renders a styled placeholder or static map image"
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "text": "Build the About Us page with sections: a hero banner with tagline, a 'Our Story' narrative paragraph, a stats row (e.g., Years in Business, Properties Sold, Happy Clients, Cities Covered), a 'Meet the Team' section with 3 placeholder agent cards (photo, name, title), and a trust-building 'Our Values' section with 3–4 icon+text items.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "About Us: A section to build trust, highlighting local expertise and years of experience."
+        ]
+      },
+      "acceptanceCriteria": [
+        "About page renders at /about with all described sections",
+        "Stats row displays at least 4 metrics with numbers and labels",
+        "Team section shows 3 agent cards using the generated agent placeholder images",
+        "Our Values section displays at least 3 values with icons"
+      ]
+    },
+    {
+      "id": "REQ-8",
+      "text": "Build the Contact page (/contact) with: a contact form (Name, Email, Phone, Subject, Message fields) that submits via submitInquiry with propertyId set to 'general'; an office info block showing a placeholder phone number, email address, and office address; and a map placeholder section consistent with the Property Detail page style.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "Contact: A dedicated page with a contact form, phone number, and office location."
+        ]
+      },
+      "acceptanceCriteria": [
+        "Contact page renders at /contact",
+        "Form validates Name, Email, and Message as required before submission",
+        "On successful submission, a confirmation message is displayed",
+        "Office info block shows phone, email, and address in a styled card",
+        "Map placeholder section is present and styled consistently with Property Detail page"
+      ]
+    },
+    {
+      "id": "REQ-9",
+      "text": "Build an Admin Dashboard page (/admin) with two tabs: 'Manage Listings' and 'Inquiries'. Manage Listings tab: displays all properties in a table with Edit and Delete actions; includes an 'Add New Property' button that opens a modal/form for creating or editing a property (all fields: title, description, price, sqft, location, type, amenities, imageUrls as comma-separated input, isFeatured toggle). Inquiries tab: displays all submitted leads in a table with columns for property, visitor name, email, phone, message, and timestamp.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "Property Management System: A dynamic 'Listings' section where I can easily add, edit, and delete property profiles"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Admin page is accessible at /admin",
+        "Manage Listings tab lists all properties with Edit and Delete buttons",
+        "Clicking Delete calls deleteProperty and removes the row from the list",
+        "Add/Edit modal form has all property fields and submits correctly (addProperty or updateProperty)",
+        "Inquiries tab lists all leads with all relevant fields displayed",
+        "Both tabs use React Query for data fetching with loading and error states"
+      ]
+    },
+    {
+      "id": "REQ-10",
+      "text": "Implement a persistent global navigation header with the Prime Properties logo/wordmark, nav links (Home, Listings, About, Contact), and a prominent 'List Your Property' CTA button. Include a responsive mobile hamburger menu. Add a footer with company name, quick links, contact info placeholder, and a copyright line.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "Mobile Optimized: The site must be fully responsive and easy to navigate on smartphones."
+        ]
+      },
+      "acceptanceCriteria": [
+        "Header is present on all pages and sticks to the top on scroll",
+        "Mobile hamburger menu toggles a drawer with all nav links on screens < 768px",
+        "Footer appears on all pages with quick links, contact info, and copyright",
+        "Logo uses the generated logo image"
+      ]
+    },
+    {
+      "id": "REQ-11",
+      "text": "Apply a consistent design system across all pages: Deep Navy (#0A1628) as the primary brand color, White (#FFFFFF) as background, Gold (#C9A84C) as accent for CTAs, borders, and highlights, and light gray (#F5F5F5) for section backgrounds. Use a clean sans-serif font stack. Ensure all pages are fully responsive (mobile, tablet, desktop) with appropriate spacing, card shadows, and hover states on interactive elements.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "Style: Modern, clean, and trustworthy. Use a professional color palette (e.g., Deep Navy, White, and Gold or Forest Green accents).",
+          "Mobile Optimized: The site must be fully responsive"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Deep Navy, White, and Gold palette is applied consistently across all pages",
+        "CTA buttons use Gold background with Navy or White text",
+        "All pages render correctly on mobile (320px+), tablet (768px+), and desktop (1280px+)",
+        "Property cards and UI elements have consistent border-radius, shadow, and hover transitions",
+        "Typography uses a clean sans-serif font with clear hierarchy (headings, body, captions)"
+      ]
+    },
+    {
+      "id": "REQ-12",
+      "text": "Render the generated static images (hero banner, logo, agent placeholders, property sample images) from the frontend/public/assets/generated directory and reference them in the appropriate page components.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "Visuals: High-quality imagery, clear typography (Sans-serif), and plenty of white space to make the property photos pop."
+        ]
+      },
+      "acceptanceCriteria": [
+        "Hero banner image is rendered on the Home page as a background",
+        "Logo image appears in the navigation header",
+        "Agent placeholder images are used in the About Us team section",
+        "Sample property images are used as default listing thumbnails in seed/demo data"
+      ]
+    }
+  ],
+  "constraints": [
+    "Email delivery is not supported on-platform; inquiry form data must be stored in the backend canister and displayed in the Admin Dashboard instead of being emailed",
+    "Google Maps iframe integration is not supported; use a styled static map placeholder or a Google Maps static image URL instead",
+    "All Motoko logic must remain in a single backend/main.mo actor file",
+    "Do not modify any files under frontend/src/hooks/ or frontend/src/components/ui/",
+    "No external authentication; the Admin Dashboard does not require login for this build"
+  ],
+  "nonGoals": [
+    "Email notifications or SMTP integration for inquiry submissions",
+    "Internet Identity or user authentication for the admin panel",
+    "Real-time property availability updates or WebSocket features",
+    "Payment processing or online booking with payment",
+    "SEO meta-tag optimization or server-side rendering",
+    "Multi-language or localization support",
+    "City/region-specific SEO tailoring (no specific city was provided)"
+  ],
+  "imageRequirements": {
+    "required": [
+      "Wide cinematic hero image of a modern luxury residential building exterior at golden hour with a clean sky backdrop, warm tones (hero-banner.dim_1920x900.jpg)",
+      "Minimal professional real estate brand logo wordmark with a small house icon, deep navy and gold colors on white background (prime-properties-logo.dim_400x120.png)",
+      "Professional headshot-style portrait of a male real estate agent in a suit, neutral background (agent-male-1.dim_400x400.jpg)",
+      "Professional headshot-style portrait of a female real estate agent in business attire, neutral background (agent-female-1.dim_400x400.jpg)",
+      "Professional headshot-style portrait of a second female real estate agent smiling, neutral background (agent-female-2.dim_400x400.jpg)",
+      "High-quality photo of a modern spacious living room interior with large windows and neutral decor (property-sample-1.dim_800x600.jpg)",
+      "Aerial view of a contemporary suburban residential house with a manicured garden (property-sample-2.dim_800x600.jpg)",
+      "Sleek modern office building exterior with glass facade in an urban setting (property-sample-3.dim_800x600.jpg)",
+      "Bright open-plan commercial retail space interior with polished floors and high ceilings (property-sample-4.dim_800x600.jpg)"
+    ],
+    "edits": []
+  }
+}

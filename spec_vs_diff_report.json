@@ -1,0 +1,101 @@
+{
+  "kind": "spec_vs_diff_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-27T09:14:16.966Z",
+  "summary": "The diff implements most requirements well. The backend Motoko actor covers REQ-1 and REQ-2. The frontend covers routing (REQ-3), Home page (REQ-4), All Listings (REQ-5), About Us (REQ-7), Contact (REQ-8), Admin Dashboard (REQ-9), Header/Footer (REQ-10), design system (REQ-11), and static image references (REQ-12). However, several specific acceptance criteria have gaps: the Contact page uses a reused InquiryForm component that lacks the required Subject field and uses BigInt(0) instead of the string 'general' as propertyId. The backend inquiry model uses PropertyId (Nat) rather than text for propertyId. The Header CTA says 'Admin' rather than 'List Your Property'. Some files were omitted due to truncation limits.",
+  "missing_requirements": [
+    {
+      "requirement": "Contact form must include a Subject field (Name, Email, Phone, Subject, Message fields as specified in REQ-8)",
+      "reason": "The Contact page reuses the InquiryForm component which only has Name, Email, Phone, and Message fields with no Subject field present.",
+      "evidence": [
+        "frontend/src/pages/Contact.tsx",
+        "frontend/src/components/InquiryForm.tsx"
+      ]
+    },
+    {
+      "requirement": "Contact page submitInquiry must use propertyId set to the string 'general'",
+      "reason": "The Contact page uses GENERAL_INQUIRY_ID = BigInt(0) instead of the string 'general' as specified in REQ-8.",
+      "evidence": [
+        "frontend/src/pages/Contact.tsx"
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "requirement": "Inquiry data model propertyId field must be text type",
+      "reason": "The backend Motoko Inquiry type uses propertyId as PropertyId (Nat) rather than Text as specified in REQ-2, making it impossible to store 'general' as a propertyId.",
+      "evidence": [
+        "backend/main.mo"
+      ]
+    },
+    {
+      "id": "REQ-10",
+      "requirement": "Header must include a prominent 'List Your Property' CTA button",
+      "reason": "The Header component renders an 'Admin' button linking to /admin instead of the specified 'List Your Property' CTA button.",
+      "evidence": [
+        "frontend/src/components/Header.tsx"
+      ]
+    }
+  ],
+  "hallucinated_features": [
+    {
+      "description": "Internet Identity authentication provider wrapped around the entire app and identity-based actor creation in useActor",
+      "reason": "The build request explicitly states No external authentication and lists Internet Identity or user authentication for the admin panel as a non-goal. The InternetIdentityProvider and identity-based actor logic was not requested.",
+      "evidence": [
+        "frontend/src/main.tsx",
+        "frontend/src/hooks/useActor.ts",
+        "frontend/src/hooks/useInternetIdentity.ts"
+      ]
+    },
+    {
+      "description": "Dark mode CSS variable set defined in index.css under .dark selector",
+      "reason": "The design system specification only mentions Deep Navy, White, Gold, and light gray for the palette. No dark mode theming was requested.",
+      "evidence": [
+        "frontend/src/index.css"
+      ]
+    },
+    {
+      "description": "PropertyType module with a compare function added inside the Motoko backend actor",
+      "reason": "The spec only requires PropertyType as a variant with Residential and Commercial values. A compare utility module was not part of REQ-1.",
+      "evidence": [
+        "backend/main.mo"
+      ]
+    },
+    {
+      "description": "Property.compareByPrice and Property.compareByCreatedAt helper functions in the Motoko backend",
+      "reason": "These sorting utility functions were not part of the specified CRUD API surface in REQ-1.",
+      "evidence": [
+        "backend/main.mo"
+      ]
+    }
+  ],
+  "confidence": 0.72,
+  "changed_files": [
+    "all_files_summary.json",
+    "backend/main.mo",
+    "frontend/index.css",
+    "frontend/index.html",
+    "frontend/src/App.tsx",
+    "frontend/src/components/Footer.tsx",
+    "frontend/src/components/Header.tsx",
+    "frontend/src/components/ImageGallery.tsx",
+    "frontend/src/components/InquiryForm.tsx",
+    "frontend/src/components/PropertyCard.tsx",
+    "frontend/src/components/PropertyFormModal.tsx",
+    "frontend/src/components/SearchBar.tsx",
+    "frontend/src/data/seedProperties.ts",
+    "frontend/src/hooks/useActor.ts",
+    "frontend/src/hooks/useInternetIdentity.ts",
+    "frontend/src/hooks/useQueries.ts",
+    "frontend/src/index.css",
+    "frontend/src/main.tsx",
+    "frontend/src/pages/AboutUs.tsx",
+    "frontend/src/pages/AdminDashboard.tsx",
+    "frontend/src/pages/AllListings.tsx",
+    "frontend/src/pages/Contact.tsx",
+    "frontend/src/pages/Home.tsx",
+    "frontend/src/pages/NotFound.tsx",
+    "frontend/src/pages/PropertyDetail.tsx",
+    "frontend/tailwind.config.js",
+    "project_state.json"
+  ]
+}

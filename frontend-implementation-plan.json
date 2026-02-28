@@ -1,0 +1,275 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "Prime Properties Frontend Implementation",
+  "requirements": [
+    {
+      "id": "REQ-3",
+      "summary": "Build multi-page React frontend with client-side routing for Home, All Listings, Property Detail, About Us, Contact, and Admin Dashboard pages",
+      "acceptanceCriteria": [
+        "All six routes render distinct page components without full page reload",
+        "Navigation links in the header correctly route to each page",
+        "Navigating to /listings/:id with a valid ID shows that property's detail page",
+        "404 fallback route exists for unmatched paths"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Configure React Router with routes for Home (/), All Listings (/listings), Property Detail (/listings/:id), About Us (/about), Contact (/contact), Admin Dashboard (/admin), and a 404 fallback route"
+        },
+        {
+          "path": "frontend/src/pages/Home.tsx",
+          "operation": "create",
+          "description": "Create the Home page component skeleton with placeholder sections for hero banner, featured properties, and why choose us"
+        },
+        {
+          "path": "frontend/src/pages/AllListings.tsx",
+          "operation": "create",
+          "description": "Create the All Listings page component skeleton with filter sidebar and property grid layout"
+        },
+        {
+          "path": "frontend/src/pages/PropertyDetail.tsx",
+          "operation": "create",
+          "description": "Create the Property Detail page component skeleton with sections for image gallery, details, map, and inquiry form"
+        },
+        {
+          "path": "frontend/src/pages/AboutUs.tsx",
+          "operation": "create",
+          "description": "Create the About Us page component skeleton with sections for hero, story, stats, team, and values"
+        },
+        {
+          "path": "frontend/src/pages/Contact.tsx",
+          "operation": "create",
+          "description": "Create the Contact page component skeleton with contact form, office info, and map placeholder"
+        },
+        {
+          "path": "frontend/src/pages/AdminDashboard.tsx",
+          "operation": "create",
+          "description": "Create the Admin Dashboard page component skeleton with tabs for Manage Listings and Inquiries"
+        },
+        {
+          "path": "frontend/src/pages/NotFound.tsx",
+          "operation": "create",
+          "description": "Create a 404 Not Found page component with navigation back to Home"
+        }
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "summary": "Build Home page with hero banner using generated hero image, search bar with Property Type/Max Budget/Location filters, Featured Properties carousel, and Why Choose Us section with trust signals",
+      "acceptanceCriteria": [
+        "Hero banner renders the generated hero image as background with overlay text and search bar visible on all screen sizes",
+        "Search bar dropdowns for Type and Budget are functional; Location is a free-text input",
+        "Clicking Search navigates to /listings and pre-fills filter state from query params",
+        "Featured Properties carousel shows at least 3 cards and supports horizontal scroll/swipe",
+        "Why Choose Us section displays at least 3 cards with icons and descriptive text"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/Home.tsx",
+          "operation": "modify",
+          "description": "Implement hero banner with generated hero image (frontend/public/assets/generated/hero-banner.dim_1920x900.jpg) as background, bold headline, sub-headline, and search bar with Property Type dropdown (Residential/Commercial), Max Budget dropdown (price ranges), Location text input, and Search button that navigates to /listings with query params. Add Featured Properties carousel section that fetches featured properties using getFeaturedProperties backend capability and displays property cards with image, title, price, location, type badge, and View Details button. Add Why Choose Us section with 3-4 icon+text cards highlighting trust signals (expert agents, verified listings, fast deals, local market knowledge)"
+        },
+        {
+          "path": "frontend/src/components/PropertyCard.tsx",
+          "operation": "create",
+          "description": "Create reusable PropertyCard component that displays property thumbnail image, title, price (formatted with currency), square footage, location, property type badge, and View Details button linking to /listings/:id"
+        },
+        {
+          "path": "frontend/src/components/SearchBar.tsx",
+          "operation": "create",
+          "description": "Create SearchBar component with dropdowns for Property Type (Residential/Commercial/All), Max Budget (price range options: All, <$200k, <$500k, <$1M, <$2M, $2M+), Location text input, and Search button. Component accepts initial values from props and calls onSearch callback with filter values"
+        }
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "summary": "Build All Listings page with filter panel and responsive property grid that applies URL query param filters and updates URL on filter changes",
+      "acceptanceCriteria": [
+        "Grid shows all properties returned by getAllProperties when no filters are active",
+        "Changing filter values re-queries searchProperties and updates the displayed cards",
+        "Filter state is reflected in the URL query string",
+        "Each card's View Details button navigates to the correct /listings/:id route",
+        "Empty state message shown when no properties match the filters"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/AllListings.tsx",
+          "operation": "modify",
+          "description": "Implement filter panel with Property Type, Max Budget, and Location inputs that read initial state from URL query params and update URL when filters change. Fetch properties using searchProperties backend capability with active filter values. Display property grid using PropertyCard components. Show loading spinner during fetch and empty state message when no properties match filters. Use React Router's useSearchParams to manage filter state in URL"
+        }
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "summary": "Build Property Detail page with multi-image gallery, full property details, location map placeholder, and Book a Visit inquiry form that calls submitInquiry backend capability",
+      "acceptanceCriteria": [
+        "Navigating to /listings/:id fetches and displays the correct property data",
+        "Image gallery shows all imageUrls; clicking a thumbnail updates the large preview",
+        "All property fields (price, sqft, location, type, amenities, description) are displayed",
+        "Inquiry form validates required fields (Name, Email, Message) before submission",
+        "On successful submitInquiry call, a success message is displayed to the user",
+        "Map section renders a styled placeholder or static map image"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/PropertyDetail.tsx",
+          "operation": "modify",
+          "description": "Fetch property by ID using getProperty backend capability. Implement multi-image gallery with thumbnail strip and large preview (clicking thumbnail updates preview). Display all property details: title, price (formatted), square footage, location, property type badge, amenities list, and full description. Add Location Map section with styled placeholder (gradient background with map icon and 'Location Map' label). Implement Book a Visit form with Name (required), Email (required), Phone, Message (required) fields and Submit button. On form submit, call submitInquiry backend capability with propertyId and form data, then display success confirmation message. Show loading state while fetching property and handle not found case"
+        },
+        {
+          "path": "frontend/src/components/ImageGallery.tsx",
+          "operation": "create",
+          "description": "Create ImageGallery component that accepts imageUrls array and displays a large preview image with a horizontal thumbnail strip below. Clicking a thumbnail updates the large preview. Use responsive layout with proper aspect ratios"
+        },
+        {
+          "path": "frontend/src/components/InquiryForm.tsx",
+          "operation": "create",
+          "description": "Create reusable InquiryForm component with fields for Name, Email, Phone, and Message. Validate required fields (Name, Email, Message) and email format before submission. Accept propertyId and onSuccess callback as props. Call submitInquiry backend capability on submit and invoke onSuccess callback on successful submission"
+        }
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "summary": "Build About Us page with hero banner, Our Story narrative, stats row, Meet the Team section with agent cards using generated agent images, and Our Values section",
+      "acceptanceCriteria": [
+        "About page renders at /about with all described sections",
+        "Stats row displays at least 4 metrics with numbers and labels",
+        "Team section shows 3 agent cards using the generated agent placeholder images",
+        "Our Values section displays at least 3 values with icons"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/AboutUs.tsx",
+          "operation": "modify",
+          "description": "Implement hero banner section with tagline. Add Our Story section with narrative paragraph about Prime Properties. Create stats row displaying 4 metrics: Years in Business (10+), Properties Sold (500+), Happy Clients (1000+), Cities Covered (5+). Build Meet the Team section with 3 agent cards using generated agent images (frontend/public/assets/generated/agent-male-1.dim_400x400.jpg, frontend/public/assets/generated/agent-female-1.dim_400x400.jpg, frontend/public/assets/generated/agent-female-2.dim_400x400.jpg) with placeholder names and titles. Add Our Values section with 4 icon+text items: Trust, Expertise, Innovation, Client Focus"
+        }
+      ]
+    },
+    {
+      "id": "REQ-8",
+      "summary": "Build Contact page with contact form submitting via submitInquiry with propertyId 'general', office info block, and map placeholder",
+      "acceptanceCriteria": [
+        "Contact page renders at /contact",
+        "Form validates Name, Email, and Message as required before submission",
+        "On successful submission, a confirmation message is displayed",
+        "Office info block shows phone, email, and address in a styled card",
+        "Map placeholder section is present and styled consistently with Property Detail page"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/Contact.tsx",
+          "operation": "modify",
+          "description": "Implement contact form using InquiryForm component with propertyId set to 'general'. Add office info block displaying placeholder phone (+1 555-123-4567), email (contact@primeproperties.com), and office address (123 Main Street, Suite 100, Your City, State 12345) in a styled card. Add map placeholder section consistent with Property Detail page style (gradient background with map icon)"
+        }
+      ]
+    },
+    {
+      "id": "REQ-9",
+      "summary": "Build Admin Dashboard with Manage Listings tab (table with Edit/Delete actions and Add New Property modal) and Inquiries tab (leads table)",
+      "acceptanceCriteria": [
+        "Admin page is accessible at /admin",
+        "Manage Listings tab lists all properties with Edit and Delete buttons",
+        "Clicking Delete calls deleteProperty and removes the row from the list",
+        "Add/Edit modal form has all property fields and submits correctly (addProperty or updateProperty)",
+        "Inquiries tab lists all leads with all relevant fields displayed",
+        "Both tabs use React Query for data fetching with loading and error states"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/AdminDashboard.tsx",
+          "operation": "modify",
+          "description": "Implement tabbed interface with Manage Listings and Inquiries tabs. In Manage Listings tab: fetch all properties using getAllProperties backend capability, display in table with columns for title, price, location, type, and actions. Add Edit and Delete buttons for each row. Delete button calls deleteProperty backend capability and refetches list. Add New Property button opens modal with form containing all property fields: title, description, price (number input), square footage (number input), location, property type (dropdown), amenities (multi-value text input or comma-separated), imageUrls (comma-separated text input), and isFeatured (toggle). Form submits to addProperty or updateProperty backend capability. In Inquiries tab: fetch all inquiries using getAllInquiries backend capability and display in table with columns for property ID, visitor name, email, phone, message, and timestamp. Use loading and error states for both tabs"
+        },
+        {
+          "path": "frontend/src/components/PropertyFormModal.tsx",
+          "operation": "create",
+          "description": "Create PropertyFormModal component with form fields for all property attributes: title, description, price, square footage, location, property type (dropdown), amenities (textarea with comma-separated parsing), imageUrls (textarea with comma-separated parsing), and isFeatured (checkbox). Accept mode (add/edit), initialData, and onSuccess callback as props. Validate all fields before submission. Call addProperty or updateProperty backend capability based on mode"
+        }
+      ]
+    },
+    {
+      "id": "REQ-10",
+      "summary": "Implement persistent global navigation header with logo, nav links, List Your Property CTA, responsive mobile hamburger menu, and footer with quick links and contact info",
+      "acceptanceCriteria": [
+        "Header is present on all pages and sticks to the top on scroll",
+        "Mobile hamburger menu toggles a drawer with all nav links on screens < 768px",
+        "Footer appears on all pages with quick links, contact info, and copyright",
+        "Logo uses the generated logo image"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/Header.tsx",
+          "operation": "create",
+          "description": "Create Header component with Prime Properties logo using generated logo image (frontend/public/assets/generated/prime-properties-logo.dim_400x120.png), navigation links (Home, Listings, About, Contact), and List Your Property CTA button (links to /admin). Implement responsive mobile hamburger menu that toggles a drawer with all nav links on screens < 768px. Make header sticky on scroll"
+        },
+        {
+          "path": "frontend/src/components/Footer.tsx",
+          "operation": "create",
+          "description": "Create Footer component with Prime Properties company name, quick links section (Home, Listings, About, Contact), contact info placeholder (phone, email, address), and copyright line with current year"
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Wrap all routes with Header and Footer components so they appear on every page"
+        }
+      ]
+    },
+    {
+      "id": "REQ-11",
+      "summary": "Apply consistent design system with Deep Navy (#0A1628), White (#FFFFFF), Gold (#C9A84C), and light gray (#F5F5F5) palette, clean sans-serif fonts, and full responsive design",
+      "acceptanceCriteria": [
+        "Deep Navy, White, and Gold palette is applied consistently across all pages",
+        "CTA buttons use Gold background with Navy or White text",
+        "All pages render correctly on mobile (320px+), tablet (768px+), and desktop (1280px+)",
+        "Property cards and UI elements have consistent border-radius, shadow, and hover transitions",
+        "Typography uses a clean sans-serif font with clear hierarchy (headings, body, captions)"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/index.css",
+          "operation": "modify",
+          "description": "Define CSS custom properties for brand colors: --color-navy (#0A1628), --color-white (#FFFFFF), --color-gold (#C9A84C), --color-gray-light (#F5F5F5). Apply clean sans-serif font stack (system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif) as base. Define global typography styles with clear hierarchy for h1-h6, body text, and captions. Set consistent border-radius (8px for cards, 4px for inputs), shadow styles (subtle elevation for cards), and transition durations for hover states"
+        },
+        {
+          "path": "frontend/tailwind.config.js",
+          "operation": "modify",
+          "description": "Extend Tailwind theme with custom colors: navy (#0A1628), gold (#C9A84C), grayLight (#F5F5F5). Configure responsive breakpoints for mobile (320px), tablet (768px), and desktop (1280px). Set default border-radius, shadow, and transition values matching design system"
+        }
+      ]
+    },
+    {
+      "id": "REQ-12",
+      "summary": "Render generated static images (hero banner, logo, agent placeholders, property samples) from frontend/public/assets/generated directory in appropriate components",
+      "acceptanceCriteria": [
+        "Hero banner image is rendered on the Home page as a background",
+        "Logo image appears in the navigation header",
+        "Agent placeholder images are used in the About Us team section",
+        "Sample property images are used as default listing thumbnails in seed/demo data"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/Home.tsx",
+          "operation": "modify",
+          "description": "Reference hero banner image at frontend/public/assets/generated/hero-banner.dim_1920x900.jpg as background for hero section"
+        },
+        {
+          "path": "frontend/src/components/Header.tsx",
+          "operation": "modify",
+          "description": "Reference logo image at frontend/public/assets/generated/prime-properties-logo.dim_400x120.png in header"
+        },
+        {
+          "path": "frontend/src/pages/AboutUs.tsx",
+          "operation": "modify",
+          "description": "Reference agent images at frontend/public/assets/generated/agent-male-1.dim_400x400.jpg, frontend/public/assets/generated/agent-female-1.dim_400x400.jpg, and frontend/public/assets/generated/agent-female-2.dim_400x400.jpg in Meet the Team section"
+        },
+        {
+          "path": "frontend/src/data/seedProperties.ts",
+          "operation": "create",
+          "description": "Create seed data file with sample property objects using generated property images (frontend/public/assets/generated/property-sample-1.dim_800x600.jpg through property-sample-4.dim_800x600.jpg) as default imageUrls for demo listings. Export array of Property objects with realistic data matching the backend Property interface"
+        }
+      ]
+    }
+  ]
+}
